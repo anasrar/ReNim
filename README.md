@@ -97,7 +97,7 @@ For major changes or features request, please open an issue first to discuss wha
 
 ## Changelog
 
-Any changelog in [Blender Artists Community Post](#) 
+Any changelog in [Blender Artists Community Post](https://blenderartists.org/t/renim-node-based-retarget-animation/1261958) 
 
 ## License
 
