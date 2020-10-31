@@ -480,7 +480,7 @@ class NODE_BONE(Node):
         col.label(text="Influence")
         col.label(text="Multiply")
         col.label(text="Offset")
-        col.label(text="Roataion", icon="CON_ROTLIKE")
+        col.label(text="Rotation", icon="CON_ROTLIKE")
         col.label(text="Influence")
         col.label(text="Multiply")
         col.label(text="Offset")
