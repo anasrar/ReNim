@@ -35,12 +35,28 @@ class NODE_OBJECT(Node):
             # filter only bone nodes and not bind
             bone_nodes = [link.to_node for link in self.outputs[0].links if isinstance(link.to_node, NODE_BONE) and not link.to_node.is_bind]
 
+            # store current mode
+            old_mode = 'OBJECT'
+
+            # store current active object
+            old_active_object = context.active_object
+
+            # change mode to object if current mode is not object
+            if bpy.context.mode != "OBJECT":
+                # overide current mode if not object
+                old_mode = context.active_object.mode if context.active_object else context.mode
+                bpy.ops.object.mode_set(mode='OBJECT')
+
+            # store selected object for seamless binding
+            selected_objects = context.selected_objects
+
             # deselect all object
             bpy.ops.object.select_all(action='DESELECT')
 
             # select target and source object
-            self.outputs[0].target_object.select_set(True)
-            self.outputs[0].source_object.select_set(True)
+            # commented becuse we don't really need to select the object
+            # self.outputs[0].target_object.select_set(True)
+            # self.outputs[0].source_object.select_set(True)
 
             # active object to target object
             context.view_layer.objects.active = self.outputs[0].target_object
@@ -54,7 +70,10 @@ class NODE_OBJECT(Node):
                 node.add_bone(context)
 
             # change mode to pose to add constraint and driver only on valid bone
-            bpy.ops.object.mode_set(mode='POSE')
+            # commented becuse we don't really need to switch mode to pose
+            # bpy.ops.object.mode_set(mode='POSE')
+            # we can use update_from_editmode() to update pose_bones collection and still can do add constarint and driver in edit mode
+            context.active_object.update_from_editmode()
             for node in bone_nodes:
                 if node.is_bind_valid:
                     node.add_constraint_bone(context)
@@ -64,6 +83,17 @@ class NODE_OBJECT(Node):
 
             # deselect all object
             bpy.ops.object.select_all(action='DESELECT')
+
+            # restore selected objects
+            for obj in selected_objects:
+                obj.select_set(True)
+
+            # change active object to old object
+            context.view_layer.objects.active = old_active_object
+
+            # change to old mode if not object
+            if old_mode != "OBJECT":
+                bpy.ops.object.mode_set(mode=old_mode)
 
         # set color node
         self.color = (0.1, 0.55, 0.25)
@@ -79,18 +109,35 @@ class NODE_OBJECT(Node):
             # filter only bone nodes and bind
             bone_nodes = [link.to_node for link in self.outputs[0].links if isinstance(link.to_node, NODE_BONE) and link.to_node.is_bind]
 
+            # store current mode
+            old_mode = 'OBJECT'
+
+            # store current active object
+            old_active_object = context.active_object
+
+            # change mode to object if current mode is not object
+            if bpy.context.mode != "OBJECT":
+                # overide current mode if not object
+                old_mode = context.active_object.mode if context.active_object else context.mode
+                bpy.ops.object.mode_set(mode='OBJECT')
+
+            # store selected object for seamless binding
+            selected_objects = context.selected_objects
+
             # deselect all object
             bpy.ops.object.select_all(action='DESELECT')
 
             # select target and source object
-            self.outputs[0].target_object.select_set(True)
-            self.outputs[0].source_object.select_set(True)
+            # commented becuse we don't really need to select the object
+            # self.outputs[0].target_object.select_set(True)
+            # self.outputs[0].source_object.select_set(True)
 
             # active object to target object
             context.view_layer.objects.active = self.outputs[0].target_object
 
             # change mode to pose to remove constraint and driver only on valid bone
-            bpy.ops.object.mode_set(mode='POSE')
+            # commented becuse we don't really need to switch mode to pose
+            # bpy.ops.object.mode_set(mode='POSE')
             for node in bone_nodes:
                 if node.is_bind_valid:
                     node.remove_constraint_bone(context)
@@ -114,6 +161,17 @@ class NODE_OBJECT(Node):
 
             # deselect all object
             bpy.ops.object.select_all(action='DESELECT')
+
+            # restore selected objects
+            for obj in selected_objects:
+                obj.select_set(True)
+
+            # change active object to old object
+            context.view_layer.objects.active = old_active_object
+
+            # change to old mode if not object
+            if old_mode != "OBJECT":
+                bpy.ops.object.mode_set(mode=old_mode)
 
         # set color node
         self.use_custom_color = False
