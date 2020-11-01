@@ -20,6 +20,10 @@ class RENIM_OP_OBJCET_BIND(RENIM_OP_Base):
     node_tree_name: bpy.props.StringProperty(default="")
     node_object_name: bpy.props.StringProperty(default="")
 
+    @classmethod
+    def poll(cls, context):
+        return context.space_data.type == "NODE_EDITOR" and context.space_data.tree_type == "ReNimNode"
+
     def execute(self, context):
         # get node
         node = bpy.data.node_groups[self.node_tree_name].nodes[self.node_object_name]
@@ -42,6 +46,10 @@ class RENIM_OP_OBJCET_CONNECT_SELECTED_BONE_NODES(RENIM_OP_Base):
 
     node_tree_name: bpy.props.StringProperty(default="")
     node_object_name: bpy.props.StringProperty(default="")
+
+    @classmethod
+    def poll(cls, context):
+        return context.space_data.type == "NODE_EDITOR" and context.space_data.tree_type == "ReNimNode"
 
     def execute(self, context):
         # get node
@@ -69,7 +77,7 @@ class RENIM_OP_OBJCET_CREATE_BONE_NODE_FROM_SELECTED_BONE(RENIM_OP_Base):
 
     @classmethod
     def poll(cls, context):
-        return context.space_data.type == "NODE_EDITOR" and context.space_data.tree_type == "ReNimNode" and context.mode == "POSE" and (bool(context.selected_pose_bones) and len(context.selected_pose_bones) == 2)
+        return context.space_data.type == "NODE_EDITOR" and context.space_data.tree_type == "ReNimNode" and context.mode == "POSE" and (bool(context.selected_pose_bones) and len(context.selected_pose_bones) == 2 and len(list(set([pose_bone.id_data for pose_bone in context.selected_pose_bones]))) == 2)
 
     node_tree_name: bpy.props.StringProperty(default="")
     node_object_name: bpy.props.StringProperty(default="")
@@ -84,15 +92,22 @@ class RENIM_OP_OBJCET_CREATE_BONE_NODE_FROM_SELECTED_BONE(RENIM_OP_Base):
         # links
         links = node_group.links
 
+        # target and source object
+        target_object = node.outputs[0].target_object
+        source_object = node.outputs[0].source_object
+
         # crate bone node
         bone_node = node_group.nodes.new('NODE_RENIM_BONE')
 
         # set location
         bone_node.location = Vector((node.width + 100, 0)) + node.location
 
+        # create tuple list pose bone for selected_pose_bones (object , bone name)
+        selected_pose_bones = [(pose_bone.id_data, pose_bone.name) for pose_bone in context.selected_pose_bones]
+
         # set bone from pose bone to node
-        bone_node.bone_target = context.selected_pose_bones[1].name
-        bone_node.bone_source = context.selected_pose_bones[0].name
+        bone_node.bone_target = next(iter([pose_bone_name for pose_bone_object, pose_bone_name in selected_pose_bones if pose_bone_object == target_object]), context.selected_pose_bones[1].name) if target_object else context.selected_pose_bones[1].name
+        bone_node.bone_source = next(iter([pose_bone_name for pose_bone_object, pose_bone_name in selected_pose_bones if pose_bone_object == source_object]), context.selected_pose_bones[0].name) if source_object else context.selected_pose_bones[0].name
 
         # unselect bone node
         bone_node.select = False
@@ -104,10 +119,11 @@ class RENIM_OP_OBJCET_CREATE_BONE_NODE_FROM_SELECTED_BONE(RENIM_OP_Base):
         links.new(node.outputs[0], bone_node.inputs[0])
 
         # back to pose mode for seamless workflow
-        if node.is_bind:
-            for obj in selected_objects:
-                obj.select_set(True)
-            bpy.ops.object.mode_set(mode='POSE')
+        # commented becuse we already handle in bone node
+        # if node.is_bind:
+        #     for obj in selected_objects:
+        #         obj.select_set(True)
+        #     bpy.ops.object.mode_set(mode='POSE')
 
         return {'FINISHED'}
 
