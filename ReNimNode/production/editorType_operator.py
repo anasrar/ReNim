@@ -10,7 +10,7 @@ class RENIM_OP_Base(Operator):
     bl_options = {'REGISTER', 'UNDO'}
     @classmethod
     def poll(cls, context):
-        return context.space_data.type == "NODE_EDITOR" and context.space_data.tree_type == "ReNimNode" and context.mode == "OBJECT"
+        return context.space_data.type == "NODE_EDITOR" and context.space_data.tree_type == "ReNimNode"
 
 class RENIM_OP_OBJCET_BIND(RENIM_OP_Base):
     """bind armature from node object"""
