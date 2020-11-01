@@ -102,11 +102,14 @@ class NODE_BONE(Node):
 
         # edit bones target and source
         target_object_edit_bones = target_object.data.edit_bones
+        # because we not select the source aramture, we can't get edit_bones collection
+        # instead we can use data bone, because we just need bone rotation relative to armature 
+        source_object_bones = source_object.data.bones
         source_object_edit_bones = source_object.data.edit_bones
 
         # get bone target and source
         target_bone = target_object_edit_bones.get(self.bone_target)
-        source_bone = source_object_edit_bones.get(self.bone_source)
+        source_bone = source_object_bones.get(self.bone_source)
 
         # create bone helper for target and source if exist
         if target_bone and source_bone:
@@ -135,7 +138,7 @@ class NODE_BONE(Node):
 
             # get target and source rotation (quaternion)
             rotation_target_bone = target_bone.matrix.to_quaternion()
-            rotation_source_bone = source_bone.matrix.to_quaternion()
+            rotation_source_bone = source_bone.matrix_local.to_quaternion()
 
             # change bone orientation base on rotation
             mimic_target_bone.matrix = rotation_target_bone.to_matrix().to_4x4()
@@ -362,16 +365,28 @@ class NODE_BONE(Node):
         # get node object
         node_object = socket_input.links[0].from_node
 
+        # store current mode
+        old_mode = 'OBJECT'
+
+        # store current active object
+        old_active_object = bpy.context.active_object
+
         # change mode to object if current mode is not object
         if bpy.context.mode != "OBJECT":
+            # overide current mode if not object
+            old_mode = bpy.context.active_object.mode if bpy.context.active_object else bpy.context.mode
             bpy.ops.object.mode_set(mode='OBJECT')
+
+        # store selected object for seamless binding
+        selected_objects = bpy.context.selected_objects
 
         # deselect all object
         bpy.ops.object.select_all(action='DESELECT')
 
         # select target and source object
-        node_object.outputs[0].target_object.select_set(True)
-        node_object.outputs[0].source_object.select_set(True)
+        # commented becuse we don't really need to select the object
+        # node_object.outputs[0].target_object.select_set(True)
+        # node_object.outputs[0].source_object.select_set(True)
 
         # active object to target object
         bpy.context.view_layer.objects.active = node_object.outputs[0].target_object
@@ -384,7 +399,10 @@ class NODE_BONE(Node):
         self.add_bone(bpy.context)
 
         # change mode to pose to add constraint and driver
-        bpy.ops.object.mode_set(mode='POSE')
+        # commented becuse we don't really need to switch mode to pose
+        # bpy.ops.object.mode_set(mode='POSE')
+        # we can use update_from_editmode() to update pose_bones collection and still can do add constarint and driver in edit mode
+        bpy.context.active_object.update_from_editmode()
         if self.is_bind_valid:
             self.add_constraint_bone(bpy.context)
 
@@ -394,28 +412,51 @@ class NODE_BONE(Node):
         # deselect all object
         bpy.ops.object.select_all(action='DESELECT')
 
+        # restore selected objects
+        for obj in selected_objects:
+            obj.select_set(True)
+
+        # change active object to old object
+        bpy.context.view_layer.objects.active = old_active_object
+
+        # change to old mode if not object
+        if old_mode != "OBJECT":
+            bpy.ops.object.mode_set(mode=old_mode)
+
     def live_unbind_bone(self):
         if self.is_bind:
             # target and source object
             target_object = self.inputs[0].target_object
             source_object = self.inputs[0].source_object
 
+            # store current mode
+            old_mode = 'OBJECT'
+
+            # store current active object
+            old_active_object = bpy.context.active_object
+
             # change mode to object if current mode is not object
             if bpy.context.mode != "OBJECT":
+                old_mode = bpy.context.active_object.mode if bpy.context.active_object else bpy.context.mode
                 bpy.ops.object.mode_set(mode='OBJECT')
+
+            # store selected object for seamless binding
+            selected_objects = bpy.context.selected_objects
 
             # deselect all object
             bpy.ops.object.select_all(action='DESELECT')
 
             # select target and source object
-            target_object.select_set(True)
-            source_object.select_set(True)
+            # commented becuse we don't really need to select the object
+            # target_object.select_set(True)
+            # source_object.select_set(True)
 
             # active object to target object
             bpy.context.view_layer.objects.active = target_object
 
             # change mode to pose to remove constraint and driver only on valid bone
-            bpy.ops.object.mode_set(mode='POSE')
+            # commented becuse we don't really need to switch mode to pose
+            # bpy.ops.object.mode_set(mode='POSE')
 
             if self.is_bind_valid:
                 self.remove_constraint_bone(bpy.context)
@@ -438,6 +479,17 @@ class NODE_BONE(Node):
 
             # deselect all object
             bpy.ops.object.select_all(action='DESELECT')
+
+            # restore selected objects
+            for obj in selected_objects:
+                obj.select_set(True)
+
+            # change active object to old object
+            bpy.context.view_layer.objects.active = old_active_object
+
+            # change to old mode if not object
+            if old_mode != "OBJECT":
+                bpy.ops.object.mode_set(mode=old_mode)
 
     def update(self):
         socket_input = self.inputs[0]
