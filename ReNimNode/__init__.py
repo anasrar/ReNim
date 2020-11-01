@@ -16,7 +16,7 @@ bl_info = {
     "author" : "Anas Rin",
     "description" : "Node-Based Retarget Animation",
     "blender" : (2, 90, 0),
-    "version" : (0, 0, 1),
+    "version" : (0, 1, 0),
     "location" : "Editor Type > Retarget Animation Node",
     "warning" : "",
     "wiki_url": "https://github.com/anasrar/ReNim", # 2.82 below
