@@ -30,7 +30,12 @@ Retarget system originally from my previous project **[Blender UE4 Workspace](ht
 
 ## Installation
 
-Edit  🡆  Preferences  🡆  Add-ons  🡆  Install  🡆  Select **ReNimNode.zip** 🡆  Install Add-ons.
+- Edit.
+- Preferences.
+- Add-ons.
+- Install.
+- Select **ReNimNode.zip**.
+- Install Add-ons.
 
 ## How To Use
 
@@ -52,7 +57,16 @@ Change editor type to **Retarget Animation Node**.
 
 ### Mapping Bone
 
-New  🡆  Add  🡆 Object  🡆  **Target And Source Object**  🡆  Fill Target And Source  🡆  Select Target And Source Armature  🡆  Change Mode To **Pose**  🡆  Select The Bone Target First And Then Select The Source Bone 🡆  **Create Bone Node From Selected Bones**  🡆  Change Mode To **Object**  🡆  **BIND**.
+- New.
+- Add.
+- Object.
+- **Target And Source Object**.
+- Fill Target And Source.
+- Select Target And Source Armature.
+- Change Mode To **Pose**.
+- Select The Bone Target And Select The Source Bone.
+- **Create Bone Node From Selected Bones**.
+- **BIND**.
 
 **NOTE** : You can mapping bone when the object node is binding.
 
@@ -60,12 +74,12 @@ New  🡆  Add  🡆 Object  🡆  **Target And Source Object**  🡆  Fill Targ
 
 ### Bake Action
 
-Change Mode To **Object** 🡆 **BAKE ACTION**
+**BAKE ACTION**
 
 **NOTE** :
 
-- You can add additional bone to bake
-- You need **UNBIND** to view baked action
+- You can add additional bone to bake.
+- You need **UNBIND** to view baked action.
 
 ![ReNim Node Bake](doc_assets/bake.gif)
 
