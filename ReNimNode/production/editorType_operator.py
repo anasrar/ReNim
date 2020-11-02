@@ -339,6 +339,21 @@ class RENIM_OP_OBJCET_BAKE_ACTION(RENIM_OP_Base):
         target_object = socket_node.target_object
         source_object = socket_node.source_object
 
+        # store current mode
+        old_mode = 'OBJECT'
+
+        # store current active object
+        old_active_object = context.active_object
+
+        # change mode to object if current mode is not object
+        if bpy.context.mode != "OBJECT":
+            # overide current mode if not object
+            old_mode = context.active_object.mode if context.active_object else context.mode
+            bpy.ops.object.mode_set(mode='OBJECT')
+
+        # store selected object for seamless binding
+        selected_objects = context.selected_objects
+
         # deselect all objects
         bpy.ops.object.select_all(action='DESELECT')
 
@@ -440,6 +455,17 @@ class RENIM_OP_OBJCET_BAKE_ACTION(RENIM_OP_Base):
 
         # change to pose mode
         bpy.ops.object.mode_set(mode='OBJECT')
+
+        # restore selected objects
+        for obj in selected_objects:
+            obj.select_set(True)
+
+        # change active object to old object
+        context.view_layer.objects.active = old_active_object
+
+        # change to old mode if not object
+        if old_mode != "OBJECT":
+            bpy.ops.object.mode_set(mode=old_mode)
 
         if self.unbind_after_bake:
             # unnbind after bake its true
