@@ -591,10 +591,10 @@ import nodeitems_utils
 from nodeitems_utils import NodeItem
 
 node_categories = [
-    NodeCategory('MAPPING', "Mapping", items=[
+    NodeCategory('RENIM_MAPPING', "Mapping", items=[
         NodeItem("NODE_RENIM_BONE")
     ]),
-    NodeCategory('LAYOUT', "Layout", items=[
+    NodeCategory('RENIM_LAYOUT', "Layout", items=[
         NodeItem("NodeFrame")
     ])
 ]
