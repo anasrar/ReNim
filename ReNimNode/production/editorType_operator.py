@@ -429,16 +429,16 @@ class RENIM_OP_OBJCET_BAKE_ACTION(RENIM_OP_Base):
             for pose_bone , is_bake_location, is_bake_rotation, is_bake_scale, ori_location, ori_rotation, ori_scale in bake_bones:
                 # bake location
                 if is_bake_location:
-                    pose_bone.keyframe_insert("location", options={"INSERTKEY_VISUAL"})
+                    pose_bone.keyframe_insert("location", options={"INSERTKEY_VISUAL"}, group=pose_bone.name + " (loc)")
 
                 # bake rotation
                 if is_bake_rotation:
-                    pose_bone.keyframe_insert("rotation_quaternion", options={"INSERTKEY_VISUAL"})
-                    pose_bone.keyframe_insert("rotation_euler", options={"INSERTKEY_VISUAL"})
+                    pose_bone.keyframe_insert("rotation_quaternion", options={"INSERTKEY_VISUAL"}, group=pose_bone.name + " (rot quat)")
+                    pose_bone.keyframe_insert("rotation_euler", options={"INSERTKEY_VISUAL"}, group=pose_bone.name + " (rot euler)")
 
                 # bake scale
                 if is_bake_scale:
-                    pose_bone.keyframe_insert("scale", options={"INSERTKEY_VISUAL"})
+                    pose_bone.keyframe_insert("scale", options={"INSERTKEY_VISUAL"}, group=pose_bone.name + " (scale)")
 
             frame += self.frame_step
 
