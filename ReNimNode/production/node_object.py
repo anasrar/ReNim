@@ -283,7 +283,7 @@ import nodeitems_utils
 from nodeitems_utils import NodeItem
 
 node_categories = [
-    NodeCategory('OBJECT', "Object", items=[
+    NodeCategory('RENIM_OBJECT', "Object", items=[
         NodeItem("NODE_RENIM_OBJECT")
     ])
 ]
