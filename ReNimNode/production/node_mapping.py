@@ -79,6 +79,15 @@ class NODE_BONE(Node):
         subtype="XYZ",
         default=[0.0, 0.0, 0.0]
     )
+    mix_mode: bpy.props.EnumProperty(
+        name="Mix Mode",
+        description="Specify how the copied and existing transformations are combined",
+        items=[
+            ("BEFORE", "Before Original", "Apply copied transformation before original, as if the constraint target is a parent. Scale is handled specially to avoid creating shear"),
+            ("AFTER", "After Original", "Apply copied transformation after original, as if the constraint target is a child. Scale is handled specially to avoid creating shear")
+        ],
+        default="AFTER"
+    )
 
     bone_target: bpy.props.StringProperty(default="")
     bone_source: bpy.props.StringProperty(default="")
@@ -205,6 +214,21 @@ class NODE_BONE(Node):
             const_copy_transform_target_bone.owner_space = "LOCAL"
             const_copy_transform_target_bone.target_space = "LOCAL_WITH_PARENT"
             const_copy_transform_target_bone.mix_mode = "BEFORE"
+
+            const_mix_mode_driver = const_copy_transform_target_bone.driver_add('mix_mode').driver
+            const_mix_mode_driver.type = 'SCRIPTED'
+
+            const_mix_mode_driver_var = const_mix_mode_driver.variables.new()
+            const_mix_mode_driver_var.name = 'mix_mode'
+            const_mix_mode_driver_var.type = 'SINGLE_PROP'
+            const_mix_mode_driver_var_target = const_mix_mode_driver_var.targets[0]
+            const_mix_mode_driver_var_target.id_type = 'NODETREE'
+            const_mix_mode_driver_var_target.id = self.id_data
+            const_mix_mode_driver_var_target.data_path = "{}".format(self.path_from_id('mix_mode'))
+            const_mix_mode_driver_var_target.rotation_mode = 'AUTO'
+            const_mix_mode_driver_var_target.transform_space = 'LOCAL_SPACE'
+
+            const_mix_mode_driver.expression = 'mix_mode + 1'
 
             # change rotation mode to XYZ just to make it easier to add driver
             mimic_source_bone.rotation_mode = 'XYZ'
@@ -540,6 +564,7 @@ class NODE_BONE(Node):
         col.label(text="Influence")
         col.label(text="Multiply")
         col.label(text="Offset")
+        col.label(text="Mix")
         col.label(text="Bone Target")
         col.label(text="Bone Source")
         col = split.column()
@@ -564,6 +589,8 @@ class NODE_BONE(Node):
         sub_col.row().prop(self, "scale_influence", text="", slider=True)
         sub_col.row().prop(self, "scale_multiply", text="")
         sub_col.row().prop(self, "scale_offset", text="")
+        sub_col = col.column()
+        sub_col.prop(self, "mix_mode", text="")
         col = col.column()
         col.enabled = not self.is_bind
         if self.inputs[0].is_linked:
