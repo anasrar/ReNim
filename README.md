@@ -7,7 +7,7 @@
 - No worry about bone orientation and scale.
 - The purpose is to retarget animation and clean up action with **NLA Editor**
 
-## Current Version : 0.1.0
+## Current Version : 0.1.2 [19/12/2020]
 
 
 ## Feature
