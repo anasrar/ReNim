@@ -1,0 +1,7 @@
+autopep8==2.1.0
+fake-bpy-module-3.6==20231118
+nodeenv==1.8.0
+pycodestyle==2.11.1
+pydocstyle==6.3.0
+pyright==1.1.355
+snowballstemmer==2.2.0
