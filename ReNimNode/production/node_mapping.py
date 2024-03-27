@@ -1,5 +1,5 @@
 import bpy
-from bpy.types import Node
+from bpy.types import BoneCollection, Node
 from bpy import props
 from nodeitems_utils import NodeItem, register_node_categories, unregister_node_categories
 from bpy.utils import register_class, unregister_class
@@ -101,7 +101,7 @@ class ReNimNodeMappingBone(ReNimNode, Node):
 
     old_update: props.BoolProperty(default=False)  # type: ignore
 
-    def add_bone(self):
+    def add_bone(self, bone_collection: BoneCollection):
         # get object socket
         socket = self.inputs[0].links[0].from_socket
 
@@ -147,9 +147,9 @@ class ReNimNodeMappingBone(ReNimNode, Node):
             mimic_target_bone.hide_select = True
             mimic_source_bone.hide_select = True
 
-            # set layer bone
-            mimic_target_bone.layers = [(index == 31) for index in range(32)]
-            mimic_source_bone.layers = [(index == 31) for index in range(32)]
+            # add to bone collection
+            bone_collection.assign(mimic_target_bone)
+            bone_collection.assign(mimic_source_bone)
 
             # get target and source rotation (quaternion)
             rotation_target_bone = target_bone.matrix.to_quaternion()

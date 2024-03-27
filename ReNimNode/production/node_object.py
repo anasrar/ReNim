@@ -82,8 +82,13 @@ class ReNimNodeObjectSourceTarget(ReNimNode, Node):
             # disbale mirror for preventing symmetrize bone
             bpy.context.active_object.data.use_mirror_x = False  # type: ignore
 
+            # create new bone collections
+            bone_collection = bpy.context.active_object.data.collections.new(  # type: ignore
+                "ReNimHelperBones")
+            bone_collection.is_visible = False
+
             for node in bone_nodes:
-                node.add_bone()
+                node.add_bone(bone_collection)
 
             # change mode to pose to add constraint and driver only on valid bone
             # commented becuse we don't really need to switch mode to pose
@@ -174,6 +179,10 @@ class ReNimNodeObjectSourceTarget(ReNimNode, Node):
                 # set color node
                 node.use_custom_color = False
                 node.is_bind = False
+
+            # remove bone collections
+            collections = bpy.context.active_object.data.collections  # type: ignore
+            collections.remove(collections.get("ReNimHelperBones"))
 
             # change mode back to object
             bpy.ops.object.mode_set(mode="OBJECT")
