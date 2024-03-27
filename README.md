@@ -7,7 +7,7 @@
 - No worry about bone orientation and scale.
 - The purpose is to retarget animation and clean up action with **NLA Editor**
 
-## Current Version : 0.1.2 [19/12/2020]
+## Current Version : 0.1.3 [2024-03-27]
 
 ## Feature
 
@@ -15,7 +15,6 @@
 - Easy tweak.
 - Preset.
 - Bake animation.
-
 
 ## Origin
 
@@ -25,7 +24,6 @@ Retarget system originally from my previous project **[Blender UE4 Workspace](ht
 
 - Gumroad : https://gum.co/renim
 - Github : https://github.com/anasrar/ReNim/releases
-
 
 ## Installation
 
@@ -42,9 +40,9 @@ Retarget system originally from my previous project **[Blender UE4 Workspace](ht
 
 Match the **Target** armature to **Source** armature rest of pose.
 
-E.G : Mixamo using  t-pose and Unreal Engine Mannequin using a-pose.
+E.G : Mixamo using t-pose and Unreal Engine Mannequin using a-pose.
 
-**NOTE** : Armature target and source must have same rotation, Mixamo armature come with rotation offset, you can apply the rotation by **CTRL+A**  🡆  **Rotation**
+**NOTE** : Armature target and source must have same rotation, Mixamo armature come with rotation offset, you can apply the rotation by **CTRL+A** 🡆 **Rotation**
 
 ![ReNim Node Match Pose](doc_assets/matchpose.gif)
 
@@ -95,8 +93,15 @@ You can load bone nodes from JSON file.
 ![ReNim Node Load Preset](doc_assets/ori-preset.gif)
 
 ## Compatibility Test
+
+### v0.1.2
+
 - 2.83+
 - 2.9+
+
+### v0.1.3
+
+- 3.6.x LTS
 
 ## Support
 
@@ -110,7 +115,7 @@ For major changes or features request, please open an issue first to discuss wha
 
 ## Changelog
 
-Any changelog in [Blender Artists Community Post](https://blenderartists.org/t/renim-node-based-retarget-animation/1261958) 
+Any changelog in [Blender Artists Community Post](https://blenderartists.org/t/renim-node-based-retarget-animation/1261958)
 
 ## License
 
