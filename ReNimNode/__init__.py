@@ -11,39 +11,38 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from . production import editor_type, editor_type_operator, socket_object, node_object, node_mapping
+
 bl_info = {
-    "name" : "ReNim Node",
-    "author" : "Anas Rin",
-    "description" : "Node-Based Retarget Animation",
-    "blender" : (2, 90, 0),
-    "version" : (0, 1, 2),
-    "location" : "Editor Type > Retarget Animation Node",
-    "warning" : "",
-    "wiki_url": "https://github.com/anasrar/ReNim", # 2.82 below
-    "doc_url": "https://github.com/anasrar/ReNim", # 2.83 above
+    "name": "ReNim Node",
+    "author": "Anas Rin",
+    "description": "Node-Based Retarget Animation",
+    "blender": (3, 6, 0),
+    "version": (0, 1, 3),
+    "location": "Editor Type > Retarget Animation Node",
+    "warning": "",
+    "wiki_url": "https://github.com/anasrar/ReNim",  # 2.82 below
+    "doc_url": "https://github.com/anasrar/ReNim",  # 2.83 above
     "tracker_url": "https://github.com/anasrar/ReNim/issues",
     "support": "COMMUNITY",
-    "category" : "Animation"
+    "category": "Animation",
 }
 
-import os
-import bpy
-from bpy.utils import register_class, unregister_class
-
-from . production import editorType, editorType_operator, socket_object, node_object, node_mapping
 
 submodules = [
-    editorType,
-    editorType_operator,
+    editor_type,
+    editor_type_operator,
     socket_object,
     node_object,
-    node_mapping
+    node_mapping,
 ]
+
 
 def register():
     for x in submodules:
         if callable(getattr(x, "register")):
             x.register()
+
 
 def unregister():
     for x in reversed(submodules):

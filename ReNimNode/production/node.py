@@ -1,14 +1,14 @@
-import bpy
-from bpy.types import Node as OriNode
-import nodeitems_utils
-from nodeitems_utils import NodeCategory as OriNodeCategory
+from bpy.types import NodeTree
+from nodeitems_utils import NodeCategory
 
-class Node(OriNode):
-    @classmethod
-    def poll(cls, ntree):
-        return ntree.bl_idname == 'ReNimNode'
 
-class NodeCategory(OriNodeCategory):
+class ReNimNode:
     @classmethod
-    def poll(cls, context):
-        return context.space_data.tree_type == 'ReNimNode'
+    def poll(cls, node_tree: NodeTree | None):
+        return node_tree is not None and node_tree.bl_idname == "ReNimNode"
+
+
+class ReNimNodeCategory(NodeCategory):
+    @classmethod
+    def poll(cls, context):  # type: ignore
+        return context.space_data.tree_type == "ReNimNode"
