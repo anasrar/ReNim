@@ -219,7 +219,15 @@ class ReNimNodeObjectSourceTarget(ReNimNode, Node):
         pass
 
     def free(self):
-        pass
+        node_tree_name = cast(str, self.id_data.name)  # type: ignore
+        node_name = self.name
+        assert isinstance(node_tree_name, str)
+
+        if self.is_bind:
+            bpy.ops.renim.toggle_bind(  # type: ignore
+                node_tree_name=node_tree_name,
+                node_source_target_name=node_name
+            )
 
     def draw_buttons(self, context, layout):
         node_tree_name = cast(str, self.id_data.name)  # type: ignore
