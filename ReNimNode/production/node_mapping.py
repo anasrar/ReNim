@@ -576,6 +576,10 @@ class ReNimNodeMappingBone(ReNimNode, Node):
 
         self.old_update = socket_input.is_linked
 
+    def free(self):
+        if self.is_bind:
+            self.live_unbind_bone()
+
     def init(self, context):
         self.color = (0.1, 0.55, 0.25)
         self.use_custom_color = False
