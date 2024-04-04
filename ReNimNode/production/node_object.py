@@ -44,6 +44,13 @@ class ReNimNodeObjectSourceTarget(ReNimNode, Node):
     def bind(self, context: Context, operator: Operator):
         socket_object_out = cast(NodeSocket, self.outputs[0])
         assert isinstance(socket_object_out, NodeSocket)
+
+        # create new bone collections
+        bone_collections = socket_object_out.target_object.data.collections  # type: ignore
+        bone_collection = bone_collections.new(  # type: ignore
+            "ReNimHelperBones")
+        bone_collection.is_visible = False
+
         # check output socket linked to some node
         if socket_object_out.is_linked:
             # bind all connected nodes bone
@@ -81,11 +88,6 @@ class ReNimNodeObjectSourceTarget(ReNimNode, Node):
             bpy.ops.object.mode_set(mode="EDIT")
             # disbale mirror for preventing symmetrize bone
             bpy.context.active_object.data.use_mirror_x = False  # type: ignore
-
-            # create new bone collections
-            bone_collection = bpy.context.active_object.data.collections.new(  # type: ignore
-                "ReNimHelperBones")
-            bone_collection.is_visible = False
 
             for node in bone_nodes:
                 node.add_bone(bone_collection)
@@ -126,6 +128,13 @@ class ReNimNodeObjectSourceTarget(ReNimNode, Node):
     def unbind(self, context: Context, operator: Operator):
         socket_object_out = cast(NodeSocket, self.outputs[0])
         assert isinstance(socket_object_out, NodeSocket)
+
+        # remove bone collections
+        bone_collections = socket_object_out.target_object.data.collections  # type: ignore
+        bone_collection = bone_collections.get("ReNimHelperBones")
+        assert bone_collection
+        bone_collections.remove(bone_collection)
+
         # check output socket linked to some node
         if socket_object_out.is_linked:
             # bind all connected nodes bone
@@ -179,10 +188,6 @@ class ReNimNodeObjectSourceTarget(ReNimNode, Node):
                 # set color node
                 node.use_custom_color = False
                 node.is_bind = False
-
-            # remove bone collections
-            collections = bpy.context.active_object.data.collections  # type: ignore
-            collections.remove(collections.get("ReNimHelperBones"))
 
             # change mode back to object
             bpy.ops.object.mode_set(mode="OBJECT")

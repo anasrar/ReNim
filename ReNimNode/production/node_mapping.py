@@ -455,7 +455,14 @@ class ReNimNodeMappingBone(ReNimNode, Node):
         # disbale mirror for preventing symmetrize bone
         bpy.context.active_object.data.use_mirror_x = False  # type: ignore
 
-        self.add_bone()
+        # bone collections
+        collections = node_object.outputs[0].target_object.data.collections
+        bone_collection = collections.get("ReNimHelperBones")
+        assert bone_collection
+
+        self.add_bone(
+            bone_collection
+        )
 
         # change mode to pose to add constraint and driver
         # commented becuse we don't really need to switch mode to pose
