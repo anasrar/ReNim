@@ -7,7 +7,7 @@
 - No worry about bone orientation and scale.
 - The purpose is to retarget animation and clean up action with **NLA Editor**
 
-## Current Version : 0.1.4 [2024-03-27]
+## Current Version : 0.1.5 [2024-04-05]
 
 ## Feature
 
@@ -103,7 +103,7 @@ You can load bone nodes from JSON file.
 
 - 3.6.x LTS
 
-### v0.1.4
+### v0.1.4 - v0.1.5
 
 - 4.1.x
 
